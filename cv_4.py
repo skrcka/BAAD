@@ -27,7 +27,6 @@ def binary_search_on_suffix_array(string: str, suffix_array: str, pattern: str):
     return None
 
 
-
 def main():
     with open('chr17.fa', 'r', encoding='utf-8') as fna:
         genome_sequence = ''.join(fna.read().splitlines())
