@@ -1,6 +1,5 @@
 import random
 import sys
-import time
 
 
 sys.setrecursionlimit(1500)
@@ -209,17 +208,14 @@ def main():
     print(f'str1: {str1}')
     print(f'str2: {str2}')
 
-    # Call the Global Alignment function and display its results
     score_global, cigar_global = global_alignment(str1, str2)
     print(f"Global Alignment Score: {score_global}")
     print(f"Global Alignment CIGAR: {cigar_global}")
 
-    # Call the Local Alignment function and display its results
     score_local, cigar_local = local_alignment(str1, str2)
     print(f"\nLocal Alignment Score: {score_local}")
     print(f"Local Alignment CIGAR: {cigar_local}")
 
-    # Call the Semi-Global Alignment function and display its results
     score_semi_global, cigar_semi_global = semi_global_alignment(str1, str2)
     print(f"\nSemi-Global Alignment Score: {score_semi_global}")
     print(f"Semi-Global Alignment CIGAR: {cigar_semi_global}")
