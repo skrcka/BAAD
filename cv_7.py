@@ -12,8 +12,8 @@ def get_overlap(a: str, b: str, min_length: int = 3):
         start += 1
 
 
-def greedy_scs(reads: str, k: int, l: int = 3):
-    reads: list[str] = [reads[i:i+k] for i in range(0, len(reads) - k + 1)]
+def greedy_scs(sequences: list[str], l: int = 3):
+    reads = sequences
     read_a, read_b = None, None
     while True:
         max_olen = 0
@@ -30,13 +30,16 @@ def greedy_scs(reads: str, k: int, l: int = 3):
     return ''.join(reads)
 
 
+def get_sequences(sequnce: str, k: int):
+    return [sequnce[i:i+k] for i in range(0, len(sequnce) - k + 1)]
+
+
 def main():
-    sequence = "ATGCGATGACGGT"
-    print(greedy_scs(sequence, 4, 3))
-    sequence = "ATGCGATGACGGTATGCGATGACGGTATGCGATGACGGTATGCGATGACGGT"
-    print(greedy_scs(sequence, 4, 3))
-    sequence = "ACGTACTGACCCTGACCTGACCTGACCT"
-    print(greedy_scs(sequence, 4, 3))
+    sequences = ['GTACGT', 'TACGTA']
+    print(greedy_scs(sequences, 4))
+
+    sequences = get_sequences('ACCTGACTGACCTGACTGACCTGACTGACCTGACTGACCTGACTG', 6)
+    print(greedy_scs(sequences, 4))
 
 
 if __name__ == '__main__':
