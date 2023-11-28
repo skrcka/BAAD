@@ -60,13 +60,6 @@ def generate_subsequences(seq: str, w: int) -> list[str]:
     return [seq[p:p+w] for p in range(len(seq) - w + 1)]
 
 
-def test_generate_subsequences() -> None:
-    seq = 'YANCLEHKMGS'
-    w = 3
-    subseqs = generate_subsequences(seq, w)
-    print(subseqs)
-
-
 def get_sequence_to_sequence_score(seq1: str, seq2: str) -> int:
     assert len(seq1) == len(seq2), "Sequences must be of equal length"
     return sum(get_blosum62_score(seq1[i], seq2[i]) for i in range(len(seq1)))
