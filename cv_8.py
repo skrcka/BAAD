@@ -117,7 +117,7 @@ def expand_subsequences(
             symbol_right_query = query_seq[q_end+i]
             symbol_right_database = database_seq[db_end+i]
             change_in_score = get_blosum62_score(symbol_right_query, symbol_right_database)
-            if change_in_score < (drop_off_score)*-1:
+            if change_in_score < (drop_off_score) * -1:
                 break
             extended_subseq = extended_subseq + symbol_right_database
             current_score += change_in_score
