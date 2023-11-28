@@ -11,30 +11,21 @@ def compute_new_distances(matrix: dict[str, dict[str, int]], a: str, b: str) -> 
     return {node: (matrix[a][node] + matrix[b][node]) / 2 for node in matrix if node != a and node != b}
 
 
-def print_phylogenetic_tree(node, node_distances: set, level=0):
-    if isinstance(node, str):
-        print(" " * level + node)
-        print(" " * (level + 1) + f"Distance from root: {node_distances[node]}")
-    else:
-        left, right = node
-        print_phylogenetic_tree(left, level + 1)
-        print_phylogenetic_tree(right, level + 1)
-
-
 def main() -> None:
     leaf_nodes = list(distance_matrix.keys())
     node_distances = {}
 
     while len(leaf_nodes) > 1:
         min_distance = float('inf')
-        min_i, min_j = None, None
+        min_i = None
+        min_j = None
 
-        for i in range(len(leaf_nodes)):
-            for j in range(i + 1, len(leaf_nodes)):
-                dist = distance_matrix[leaf_nodes[i]][leaf_nodes[j]]
+        for i, leaf_node1 in enumerate(leaf_nodes):
+            for leaf_node2 in leaf_nodes[i+1:]:
+                dist = distance_matrix[leaf_node1][leaf_node2]
                 if dist < min_distance:
                     min_distance = dist
-                    min_i, min_j = leaf_nodes[i], leaf_nodes[j]
+                    min_i, min_j = leaf_node1, leaf_node2
 
         new_node_label = f"({min_i}, {min_j})"
         new_distances = compute_new_distances(distance_matrix, min_i, min_j)
@@ -47,16 +38,16 @@ def main() -> None:
         del distance_matrix[min_i]
         del distance_matrix[min_j]
 
-        for node in distance_matrix:
+        for node, distances in distance_matrix.items():
             if node != new_node_label:
-                distance_matrix[node][new_node_label] = new_distances[node]
+                distances[new_node_label] = new_distances[node]
 
-        leaf_nodes = [node for node in leaf_nodes if node != min_i and node != min_j]
+        leaf_nodes = list(filter(lambda node: node != min_i and node != min_j, leaf_nodes))
 
     phylogenetic_tree = leaf_nodes[0]
-
     print("Fylogenetic tree (UPGMA) with distances:")
-    print_phylogenetic_tree(phylogenetic_tree, node_distances)
+    print(phylogenetic_tree)
+    print(f"Distance from root: {node_distances[phylogenetic_tree]}")
 
 
 if __name__ == '__main__':

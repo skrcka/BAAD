@@ -1,4 +1,9 @@
 from dataclasses import dataclass, field
+from typing import Iterable
+
+
+def first(item: Iterable) -> object:
+    return next(iter(item))
 
 
 @dataclass
@@ -16,17 +21,17 @@ class Node:
 def print_post_order(node: Node, level: int = 0) -> None:
     for child in node.children:
         print_post_order(child, level + 1)
-    print('  ' * level + f"{node.name}: {node.state}")
+    print(f"{'  ' * level}{node.name}: {node.state}")
 
 
 def print_pre_order(node: Node, level: int = 0) -> None:
-    print('  ' * level + f"{node.name}: {node.assigned_state}")
+    print(f"{'  ' * level}{node.name}: {node.assigned_state}")
     for child in node.children:
         print_pre_order(child, level + 1)
 
 
 def fitch_post_order(node: Node) -> set[str]:
-    if not node.children:
+    if len(node.children) == 0:
         return node.state
     for child in node.children:
         node.state |= fitch_post_order(child)
@@ -40,7 +45,7 @@ def fitch_pre_order(node: Node, parent_state: dict[str, str] | None = None) -> N
     if parent_state and parent_state in node.state:
         node.assigned_state = parent_state
     elif node.state:
-        node.assigned_state = next(iter(node.state))
+        node.assigned_state = first(node.state)
     for child in node.children:
         fitch_pre_order(child, node.assigned_state)
 
