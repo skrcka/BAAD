@@ -1,19 +1,13 @@
-leaf_states = {
-    'human': 'C',
-    'chimp': 'T',
-    'gibbon': 'G',
-    'lemur': 'T',
-    'gorilla': 'A',
-    'bonobo': 'A',
-}
+from dataclasses import dataclass, field
 
 
+@dataclass
 class Node:
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.children: list[Node] = []
-        self.state: set[int] = set()
-        self.assigned_state: dict[str, str] | None = None
+    name: str
+    children: list['Node'] = field(default_factory=list)
+    state: set[str] = field(default_factory=set)
+    assigned_state: dict[str, str] | None = None
+    is_leaf: bool = False
 
     def add_child(self, child: 'Node') -> None:
         self.children.append(child)
@@ -56,7 +50,7 @@ def calculate_parsimony(node: Node, assigned_states: dict[str, str], parsimony_l
         if child.assigned_state != node.assigned_state:
             parsimony_length += 1
         parsimony_length = calculate_parsimony(child, assigned_states, parsimony_length)
-    if node.name not in leaf_states:
+    if not node.is_leaf:
         assigned_states[node.name] = node.assigned_state
     return parsimony_length
 
@@ -87,20 +81,32 @@ def main() -> None:
     nodes['root'].add_child(nodes['internode4'])
     nodes['root'].add_child(nodes['bonobo'])
 
+    leaf_states = {
+        'human': 'C',
+        'chimp': 'T',
+        'gibbon': 'G',
+        'lemur': 'T',
+        'gorilla': 'A',
+        'bonobo': 'A',
+    }
+
     for leaf, state in leaf_states.items():
         nodes[leaf].state.add(state)
+        nodes[leaf].is_leaf = True
 
     fitch_post_order(nodes['root'])
     fitch_pre_order(nodes['root'])
     assigned_states = {}
     parsimony_length = calculate_parsimony(nodes['root'], assigned_states)
 
-    print("Uzly po prechode zdole-hore:")
+    print("Pre order:")
     print_post_order(nodes['root'])
-    print("\nUzly po prechode zhora-dole")
+    print()
+    print("Post order:")
     print_pre_order(nodes['root'])
-    print("\nParsimonie:", parsimony_length)
-    print("\nStavy vnutornych uzlov", assigned_states)
+    print()
+    print("Parsimony:", parsimony_length)
+    print("States:", assigned_states)
 
 
 if __name__ == '__main__':

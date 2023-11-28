@@ -7,8 +7,18 @@ distance_matrix = {
 }
 
 
-def compute_new_distance(matrix: dict[str, dict[str, int]], a: str, b: str) -> dict[str, int]:
+def compute_new_distances(matrix: dict[str, dict[str, int]], a: str, b: str) -> dict[str, int]:
     return {node: (matrix[a][node] + matrix[b][node]) / 2 for node in matrix if node != a and node != b}
+
+
+def print_phylogenetic_tree(node, node_distances: set, level=0):
+    if isinstance(node, str):
+        print(" " * level + node)
+        print(" " * (level + 1) + f"Distance from root: {node_distances[node]}")
+    else:
+        left, right = node
+        print_phylogenetic_tree(left, level + 1)
+        print_phylogenetic_tree(right, level + 1)
 
 
 def main() -> None:
@@ -27,7 +37,7 @@ def main() -> None:
                     min_i, min_j = leaf_nodes[i], leaf_nodes[j]
 
         new_node_label = f"({min_i}, {min_j})"
-        new_distances = compute_new_distance(distance_matrix, min_i, min_j)
+        new_distances = compute_new_distances(distance_matrix, min_i, min_j)
 
         distance_matrix[new_node_label] = new_distances
         leaf_nodes.append(new_node_label)
@@ -45,17 +55,9 @@ def main() -> None:
 
     phylogenetic_tree = leaf_nodes[0]
 
-    def print_phylogenetic_tree(node, level=0):
-        if isinstance(node, str):
-            print(" " * level + node)
-            print(" " * (level + 1) + f"Distance from root: {node_distances[node]}")
-        else:
-            left, right = node
-            print_phylogenetic_tree(left, level + 1)
-            print_phylogenetic_tree(right, level + 1)
+    print("Fylogenetic tree (UPGMA) with distances:")
+    print_phylogenetic_tree(phylogenetic_tree, node_distances)
 
-    print("Fylogenetický strom (UPGMA) s vzdálenostmi:")
-    print_phylogenetic_tree(phylogenetic_tree)
 
 if __name__ == '__main__':
     main()
