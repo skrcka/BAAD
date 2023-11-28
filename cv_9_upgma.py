@@ -17,15 +17,16 @@ def main() -> None:
 
     while len(leaf_nodes) > 1:
         min_distance = float('inf')
-        min_i = None
-        min_j = None
+        min_i = -1
+        min_j = -1
 
         for i, leaf_node1 in enumerate(leaf_nodes):
             for leaf_node2 in leaf_nodes[i+1:]:
-                dist = distance_matrix[leaf_node1][leaf_node2]
-                if dist < min_distance:
-                    min_distance = dist
-                    min_i, min_j = leaf_node1, leaf_node2
+                distance = distance_matrix[leaf_node1][leaf_node2]
+                if distance < min_distance:
+                    min_distance = distance
+                    min_i = leaf_node1
+                    min_j = leaf_node2
 
         new_node_label = f"({min_i}, {min_j})"
         new_distances = compute_new_distances(distance_matrix, min_i, min_j)
@@ -44,8 +45,8 @@ def main() -> None:
 
         leaf_nodes = list(filter(lambda node: node != min_i and node != min_j, leaf_nodes))
 
-    phylogenetic_tree = leaf_nodes[0]
     print("Fylogenetic tree (UPGMA) with distances:")
+    phylogenetic_tree = leaf_nodes[0]
     print(phylogenetic_tree)
     print(f"Distance from root: {node_distances[phylogenetic_tree]}")
 
